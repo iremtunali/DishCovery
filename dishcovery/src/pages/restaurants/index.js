@@ -1,45 +1,53 @@
+import { useState } from 'react';
 import Layout from '../../components/Layout';
 import FilterBar from '../../components/FilterBar';
 import RestaurantCard from '../../components/RestaurantCard';
-import { Box, Typography, Grid } from '@mui/material';
-import { useState } from "react";
+import { Box, Typography } from '@mui/material';
 
-const restaurantsData = [
-    { id: 1, name: "Italiano", description: "A great place for Italian food.", city: "Istanbul", category: "Italian", rating: 4.5 },
-    { id: 2, name: "Burger King", description: "Delicious fast food.", city: "Ankara", category: "Fast Food", rating: 3.8 },
-    { id: 3, name: "Kebapci İskender", description: "Authentic Turkish cuisine.", city: "Izmir", category: "Turkish", rating: 4.9 },
-    { id: 4, name: "Coffee Break", description: "Relax with a cup of coffee.", city: "Istanbul", category: "Cafe", rating: 4.2 },
+// Örnek restoran verileri
+const sampleRestaurants = [
+    { id: 1, name: 'Example Restaurant', city: 'Istanbul', category: 'Turkish' },
+    { id: 2, name: 'Another Restaurant', city: 'Ankara', category: 'Italian' },
+    { id: 3, name: 'Seafood Delight', city: 'Izmir', category: 'Seafood' },
+    { id: 4, name: 'Ankara Grill', city: 'Ankara', category: 'Turkish' },
+    { id: 5, name: 'Pizza Delight', city: 'Istanbul', category: 'Italian' },
 ];
 
 export default function Restaurants() {
-    const [filteredData, setFilteredData] = useState(restaurantsData);
+    const [searchFilters, setSearchFilters] = useState({
+        name: '',
+        city: '',
+        category: '',
+    });
 
-    const handleFilterChange = (filters) => {
-        const { search, city, category } = filters;
-
-        const filtered = restaurantsData.filter((restaurant) => {
-            const matchesSearch = restaurant.name.toLowerCase().includes(search.toLowerCase());
-            const matchesCity = city ? restaurant.city === city : true;
-            const matchesCategory = category ? restaurant.category === category : true;
-
-            return matchesSearch && matchesCity && matchesCategory;
-        });
-
-        setFilteredData(filtered);
-    };
+    // Filtreleme işlemi
+    const filteredRestaurants = sampleRestaurants.filter((restaurant) => {
+        const { name, city, category } = searchFilters;
+        return (
+            (name === '' || restaurant.name.toLowerCase().includes(name.toLowerCase())) &&
+            (city === '' || restaurant.city === city) &&
+            (category === '' || restaurant.category === category)
+        );
+    });
 
     return (
         <Layout>
             <Box sx={{ p: 4 }}>
-                <Typography variant="h4" color="primary">Restaurant List</Typography>
-                <FilterBar onFilterChange={handleFilterChange} />
-                <Grid container spacing={2}>
-                    {filteredData.map((restaurant) => (
-                        <Grid item xs={12} sm={6} md={4} key={restaurant.id}>
-                            <RestaurantCard restaurant={restaurant} />
-                        </Grid>
-                    ))}
-                </Grid>
+                <Typography variant="h4" color="primary" sx={{ mb: 2 }}>
+                    Restaurant List
+                </Typography>
+                <FilterBar setSearchFilters={setSearchFilters} />
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 2 }}>
+                    {filteredRestaurants.length > 0 ? (
+                        filteredRestaurants.map((restaurant) => (
+                            <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+                        ))
+                    ) : (
+                        <Typography variant="body1" color="textSecondary">
+                            No restaurants found.
+                        </Typography>
+                    )}
+                </Box>
             </Box>
         </Layout>
     );

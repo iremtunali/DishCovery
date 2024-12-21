@@ -1,10 +1,33 @@
-import Layout from '../../components/Layout';
+import React from "react";
+import Navbar from "@/components/Navbar"; // Navbar bileşeni
+import ProfileHeader from "@/components/ProfileHeader";
+import PostGrid from "@/components/PostGrid";
 
-export default function Profile() {
+const ProfilePage = () => {
+    const user = {
+        username: "john_doe",
+        profilePicture: "/ProfilePhoto.jpg",
+        bio: "Food lover, traveler, and photographer 🌍🍴📸",
+        postsCount: 34,
+        followersCount: 1200,
+        followingCount: 200,
+    };
+
+    const posts = [
+        { imageUrl: "/Post1.jpg" },
+        { imageUrl: "/Post2.jpg" },
+        { imageUrl: "/Post3.jpg" },
+    ];
+
     return (
-        <Layout>
-            <h1>User Profile</h1>
-            <p>Manage your account and preferences here.</p>
-        </Layout>
+        <>
+            <Navbar /> {/* Navbar her sayfa için elle eklenir */}
+            <div style={{ marginTop: "20px", padding: "20px" }}>
+                <ProfileHeader {...user} />
+                <PostGrid posts={posts} />
+            </div>
+        </>
     );
-}
+};
+
+export default ProfilePage;
