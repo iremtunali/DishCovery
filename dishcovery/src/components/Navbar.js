@@ -8,22 +8,25 @@ export default function Navbar() {
     return (
         <AppBar position="static" color="primary">
             <Toolbar>
+                {/* Logo veya Başlık */}
                 <Typography variant="h6" sx={{ flexGrow: 1 }}>
                     Dishcovery
                 </Typography>
+
+                {/* Navigasyon Butonları */}
                 <Box>
                     <Link href="/" passHref>
-                        <IconButton color="inherit">
+                        <IconButton color="inherit" aria-label="Anasayfa">
                             <HomeIcon />
                         </IconButton>
                     </Link>
                     <Link href="/restaurants" passHref>
-                        <IconButton color="inherit">
+                        <IconButton color="inherit" aria-label="Restoranlar">
                             <SearchIcon />
                         </IconButton>
                     </Link>
                     <Link href="/profile" passHref>
-                        <IconButton color="inherit">
+                        <IconButton color="inherit" aria-label="Profil">
                             <AccountCircleIcon />
                         </IconButton>
                     </Link>
