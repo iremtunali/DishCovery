@@ -1,19 +1,19 @@
-import { Card, CardContent, Typography, CardActions, Button } from '@mui/material';
+import { Card, CardContent, Typography, Box, Rating } from '@mui/material';
 
-export default function RestaurantCard({ name, description }) {
+export default function RestaurantCard({ restaurant }) {
     return (
-        <Card sx={{ minWidth: 275 }}>
+        <Card sx={{ width: '100%', maxWidth: '300px', boxShadow: 3 }}>
             <CardContent>
-                <Typography variant="h5" component="div">
-                    {name}
-                </Typography>
-                <Typography variant="body2" color="textSecondary">
-                    {description}
+                <Typography variant="h6">{restaurant.name}</Typography>
+                <Typography color="text.secondary">{restaurant.city}</Typography>
+                <Typography color="text.secondary">{restaurant.category}</Typography>
+                <Box sx={{ marginTop: '10px' }}>
+                    <Rating value={restaurant.rating} readOnly />
+                </Box>
+                <Typography variant="body2" color="textSecondary" sx={{ mt: 1 }}>
+                    {restaurant.description}
                 </Typography>
             </CardContent>
-            <CardActions>
-                <Button size="small">View More</Button>
-            </CardActions>
         </Card>
     );
 }
