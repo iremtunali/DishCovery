@@ -1,7 +1,7 @@
 import React from "react";
-import Navbar from "@/components/Navbar"; // Navbar bileşeni
+import Layout from "@/components/Layout"; // Navbar için Layout
 import ProfileHeader from "@/components/ProfileHeader";
-import PostGrid from "@/components/PostGrid";
+import Favorites from "@/components/Favorites"; // Favoriler bileşeni
 
 const ProfilePage = () => {
     const user = {
@@ -13,20 +13,21 @@ const ProfilePage = () => {
         followingCount: 200,
     };
 
-    const posts = [
-        { imageUrl: "/Post1.jpg" },
-        { imageUrl: "/Post2.jpg" },
-        { imageUrl: "/Post3.jpg" },
+    // Kullanıcının favori restoranları
+    const favorites = [
+        { id: 1, imageUrl: "/Post1.jpg", name: "Pizza Paradise" },
+        { id: 2, imageUrl: "/Post2.jpg", name: "Sushi Heaven" },
+        { id: 3, imageUrl: "/Post3.jpg", name: "Burger Town" },
     ];
 
+
     return (
-        <>
-            <Navbar /> {/* Navbar her sayfa için elle eklenir */}
-            <div style={{ marginTop: "20px", padding: "20px" }}>
-                <ProfileHeader {...user} />
-                <PostGrid posts={posts} />
-            </div>
-        </>
+        <Layout>
+            {/* Kullanıcı bilgilerini gösteren başlık */}
+            <ProfileHeader {...user} />
+            {/* Sadece favori restoranlar gösteriliyor */}
+            <Favorites favorites={favorites} />
+        </Layout>
     );
 };
 
