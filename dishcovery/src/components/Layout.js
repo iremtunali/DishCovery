@@ -1,13 +1,13 @@
-import Navbar from './Navbar';
-import { Container } from '@mui/material';
+import React from 'react';
+import Navbar from './Navbar'; // Navbar bileşenini içe aktarın
 
-export default function Layout({ children }) {
+const Layout = ({ children }) => {
     return (
-        <>
-            <Navbar />
-            <Container maxWidth="lg" sx={{ mt: 2 }}>
-                {children}
-            </Container>
-        </>
+        <div>
+            <Navbar /> {/* Navbar her sayfada gösterilecek */}
+            <main>{children}</main> {/* Sayfa içeriği buraya yerleştirilir */}
+        </div>
     );
-}
+};
+
+export default Layout;
