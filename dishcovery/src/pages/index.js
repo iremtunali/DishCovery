@@ -22,6 +22,7 @@ const Home = () => {
             }
         } catch (err) {
             setError("Sunucuyla bağlantı kurulamadı.");
+            console.error(err);
         } finally {
             setLoading(false);
         }
