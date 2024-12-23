@@ -1,7 +1,25 @@
-import React from "react";
-import "../styles/global.css"; // Global CSS dosyasını kullanmak için
+import React, { useState, useEffect } from "react";
+import RestaurantCard from "../components/RestaurantCard"; // RestaurantCard bileşeni
+import "../styles/global.css"; // Global CSS dosyası
 
 const Home = () => {
+    const [restaurants, setRestaurants] = useState([]); // Restoranları tutacak state
+
+    useEffect(() => {
+        // Restoran verilerini API'den çekmek için useEffect kullanıyoruz
+        async function fetchRestaurants() {
+            try {
+                const response = await fetch("/api/restaurants"); // API endpoint çağrısı
+                const data = await response.json();
+                setRestaurants(data); // Restoranları state'e kaydet
+            } catch (error) {
+                console.error("Restoran verileri alınırken hata oluştu:", error);
+            }
+        }
+
+        fetchRestaurants();
+    }, []); // İlk yüklemede çağrılır
+
     return (
         <div>
             {/* Hoşgeldiniz Mesajı */}
@@ -11,19 +29,13 @@ const Home = () => {
             </header>
 
             <div style={styles.container}>
-
-                {/* Popüler Restoranlar */}
+                {/* Restoran Listesi */}
                 <section style={styles.section}>
                     <h2>Popüler Restoranlar</h2>
-                    <div style={styles.card}>
-                        <img src="/images/restaurant1.png" alt="Restoran 1" style={styles.image} />
-                        <h3>Restoran 1</h3>
-                        <p>Lezzetli yemekleri ve harika ambiyansı ile ünlü.</p>
-                    </div>
-                    <div style={styles.card}>
-                        <img src="/images/restaurant2.png" alt="Restoran 2" style={styles.image} />
-                        <h3>Restoran 2</h3>
-                        <p>Şehrin en iyi burgerlerini burada bulabilirsiniz.</p>
+                    <div style={styles.grid}>
+                        {restaurants.map((restaurant) => (
+                            <RestaurantCard key={restaurant.id} restaurant={restaurant} />
+                        ))}
                     </div>
                 </section>
 
@@ -53,7 +65,6 @@ const Home = () => {
                         </div>
                     </div>
                 </section>
-
             </div>
         </div>
     );
@@ -72,17 +83,10 @@ const styles = {
     section: {
         marginBottom: "20px",
     },
-    card: {
-        background: "white",
-        padding: "15px",
-        borderRadius: "8px",
-        boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
-        marginBottom: "10px",
-    },
-    image: {
-        width: "100%",
-        height: "auto",
-        borderRadius: "5px",
+    grid: {
+        display: "flex",
+        gap: "20px",
+        flexWrap: "wrap",
     },
 };
 

@@ -1,50 +1,30 @@
-import { Box, TextField, MenuItem } from '@mui/material';
+import React, { useState } from "react";
 
-export default function FilterBar({ setSearchFilters }) {
-    const handleInputChange = (event) => {
-        const { name, value } = event.target;
-        setSearchFilters((prev) => ({ ...prev, [name]: value }));
+const FilterBar = ({ onSearch }) => {
+    const [city, setCity] = useState("");
+
+    const handleSearch = () => {
+        if (city.trim() === "") {
+            alert("Lütfen bir şehir girin.");
+            return;
+        }
+        onSearch(city); // Şehir bilgisini üst komponentlere gönder
     };
 
     return (
-        <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
-            {/* Arama Çubuğu */}
-            <TextField
-                name="name"
-                label="Search by Name"
-                variant="outlined"
-                onChange={handleInputChange}
-                fullWidth
+        <div style={{ margin: "20px 0" }}>
+            <input
+                type="text"
+                value={city}
+                onChange={(e) => setCity(e.target.value)}
+                placeholder="Şehir adı girin..."
+                style={{ padding: "10px", width: "200px", marginRight: "10px" }}
             />
-            {/* Şehir Filtresi */}
-            <TextField
-                name="city"
-                label="Filter by City"
-                variant="outlined"
-                select
-                onChange={handleInputChange}
-                fullWidth
-            >
-                <MenuItem value="">All Cities</MenuItem>
-                <MenuItem value="Istanbul">Istanbul</MenuItem>
-                <MenuItem value="Ankara">Ankara</MenuItem>
-                <MenuItem value="Izmir">Izmir</MenuItem>
-            </TextField>
-            {/* Kategori Filtresi */}
-            <TextField
-                name="category"
-                label="Filter by Category"
-                variant="outlined"
-                select
-                onChange={handleInputChange}
-                fullWidth
-            >
-                <MenuItem value="">All Categories</MenuItem>
-                <MenuItem value="Turkish">Turkish</MenuItem>
-                <MenuItem value="Italian">Italian</MenuItem>
-                <MenuItem value="Seafood">Seafood</MenuItem>
-            </TextField>
-        </Box>
+            <button onClick={handleSearch} style={{ padding: "10px 20px" }}>
+                Ara
+            </button>
+        </div>
     );
-}
+};
 
+export default FilterBar;
