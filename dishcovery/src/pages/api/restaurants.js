@@ -1,6 +1,6 @@
 export default async function handler(req, res) {
-    const { query } = req.query; // Kullanıcının arama yaptığı şehir veya anahtar kelime
-    const apiKey = process.env.GOOGLE_API_KEY; // API anahtarı
+    const { query } = req.query; // Kullanıcıdan gelen şehir veya anahtar kelime
+    const apiKey = process.env.GOOGLE_API_KEY; // .env.local'dan gelen Google API anahtarı
 
     if (!query) {
         return res.status(400).json({ error: "Query parametresi eksik." });
@@ -16,7 +16,7 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: data.error_message });
         }
 
-        // İlgili restoran verilerini seçiyoruz
+        // Restoran verilerini formatlıyoruz
         const restaurants = data.results.map((place) => ({
             id: place.place_id,
             name: place.name,

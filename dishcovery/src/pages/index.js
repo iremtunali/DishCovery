@@ -1,56 +1,26 @@
-import React, { useState } from "react";
-import FilterBar from "../components/FilterBar";
-import RestaurantCard from "../components/RestaurantCard";
+import React from "react";
+import Layout from "@/components/Layout";
 
-const Home = () => {
-    const [restaurants, setRestaurants] = useState([]);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState("");
-
-    const handleSearch = async (city) => {
-        setLoading(true);
-        setError("");
-
-        try {
-            const response = await fetch(`/api/restaurants?query=${city}`);
-            const data = await response.json();
-
-            if (response.ok) {
-                setRestaurants(data); // Gelen restoran verilerini state'e ata
-            } else {
-                setError(data.error || "Bir hata oluştu.");
-            }
-        } catch (err) {
-            setError("Sunucuyla bağlantı kurulamadı.");
-            console.error(err);
-        } finally {
-            setLoading(false);
-        }
-    };
+const HomePage = () => {
+    const popularPosts = [
+        { id: 1, name: "Pizza Delight", imageUrl: "/Post1.jpg" },
+        { id: 2, name: "Sushi Haven", imageUrl: "/Post2.jpg" },
+        { id: 3, name: "Burger Fiesta", imageUrl: "/Post3.jpg" },
+    ];
 
     return (
-        <div>
-            {/* Şehir arama çubuğu */}
-            <FilterBar onSearch={handleSearch} />
-
-            {/* Yükleniyor durumu */}
-            {loading && <p>Restoranlar yükleniyor...</p>}
-
-            {/* Hata mesajı */}
-            {error && <p style={{ color: "red" }}>{error}</p>}
-
-            {/* Restoran listesi */}
-            <div style={{ display: "flex", gap: "20px", flexWrap: "wrap", marginTop: "20px" }}>
-                {restaurants.length > 0 ? (
-                    restaurants.map((restaurant) => (
-                        <RestaurantCard key={restaurant.id} restaurant={restaurant} />
-                    ))
-                ) : (
-                    !loading && <p>Restoran bulunamadı.</p>
-                )}
+        <Layout>
+            <h1 style={{ textAlign: "center", margin: "20px 0" }}>Popüler Restoranlar</h1>
+            <div style={{ display: "flex", gap: "20px", justifyContent: "center" }}>
+                {popularPosts.map((post) => (
+                    <div key={post.id} style={{ border: "1px solid #ccc", padding: "10px", width: "200px" }}>
+                        <img src={post.imageUrl} alt={post.name} style={{ width: "100%" }} />
+                        <h3 style={{ textAlign: "center" }}>{post.name}</h3>
+                    </div>
+                ))}
             </div>
-        </div>
+        </Layout>
     );
 };
 
-export default Home;
+export default HomePage;

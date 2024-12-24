@@ -1,7 +1,5 @@
 import React from "react";
-import Layout from "@/components/Layout"; // Navbar için Layout
-import ProfileHeader from "@/components/ProfileHeader";
-import Favorites from "@/components/Favorites"; // Favoriler bileşeni
+import Layout from "@/components/Layout";
 
 const ProfilePage = () => {
     const user = {
@@ -13,20 +11,32 @@ const ProfilePage = () => {
         followingCount: 200,
     };
 
-    // Kullanıcının favori restoranları
     const favorites = [
-        { id: 1, imageUrl: "/Post1.jpg", name: "Pizza Paradise" },
-        { id: 2, imageUrl: "/Post2.jpg", name: "Sushi Heaven" },
-        { id: 3, imageUrl: "/Post3.jpg", name: "Burger Town" },
+        { id: 1, name: "Pizza Paradise", imageUrl: "/Post1.jpg" },
+        { id: 2, name: "Sushi Heaven", imageUrl: "/Post2.jpg" },
+        { id: 3, name: "Burger Town", imageUrl: "/Post3.jpg" },
     ];
-
 
     return (
         <Layout>
-            {/* Kullanıcı bilgilerini gösteren başlık */}
-            <ProfileHeader {...user} />
-            {/* Sadece favori restoranlar gösteriliyor */}
-            <Favorites favorites={favorites} />
+            <div style={{ textAlign: "center", margin: "20px 0" }}>
+                <img src={user.profilePicture} alt="Profile" style={{ width: "100px", borderRadius: "50%" }} />
+                <h2>{user.username}</h2>
+                <p>{user.bio}</p>
+                <div>
+                    <strong>{user.postsCount}</strong> Posts | <strong>{user.followersCount}</strong> Followers |{" "}
+                    <strong>{user.followingCount}</strong> Following
+                </div>
+            </div>
+            <h3 style={{ margin: "20px 0" }}>❤️ Favorites</h3>
+            <div style={{ display: "flex", gap: "20px", justifyContent: "center" }}>
+                {favorites.map((favorite) => (
+                    <div key={favorite.id} style={{ border: "1px solid #ccc", padding: "10px", width: "200px" }}>
+                        <img src={favorite.imageUrl} alt={favorite.name} style={{ width: "100%" }} />
+                        <h4>{favorite.name}</h4>
+                    </div>
+                ))}
+            </div>
         </Layout>
     );
 };

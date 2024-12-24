@@ -1,13 +1,14 @@
 import React from 'react';
-import Navbar from './Navbar'; // Navbar bileşenini içe aktarın
+import Navbar from './Navbar';
 
 const Layout = ({ children }) => {
     return (
-        <div>
-            <Navbar /> {/* Navbar her sayfada gösterilecek */}
-            <main>{children}</main> {/* Sayfa içeriği buraya yerleştirilir */}
-        </div>
+        <>
+            <Navbar />
+            <main>{children}</main>
+        </>
     );
 };
 
 export default Layout;
+

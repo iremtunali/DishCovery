@@ -1,54 +1,62 @@
-import { useState } from 'react';
-import Layout from '../../components/Layout';
-import FilterBar from '../../components/FilterBar';
-import RestaurantCard from '../../components/RestaurantCard';
-import { Box, Typography } from '@mui/material';
+import React, { useState } from 'react';
+import Layout from '@/components/Layout';
 
-// Örnek restoran verileri
-const sampleRestaurants = [
-    { id: 1, name: 'Example Restaurant', city: 'Istanbul', category: 'Turkish' },
-    { id: 2, name: 'Another Restaurant', city: 'Ankara', category: 'Italian' },
-    { id: 3, name: 'Seafood Delight', city: 'Izmir', category: 'Seafood' },
-    { id: 4, name: 'Ankara Grill', city: 'Ankara', category: 'Turkish' },
-    { id: 5, name: 'Pizza Delight', city: 'Istanbul', category: 'Italian' },
-];
+const Restaurants = () => {
+    const [restaurants, setRestaurants] = useState([]);
+    const [query, setQuery] = useState('');
+    const [error, setError] = useState(null);
 
-export default function Restaurants() {
-    const [searchFilters, setSearchFilters] = useState({
-        name: '',
-        city: '',
-        category: '',
-    });
+    const fetchRestaurants = async () => {
+        try {
+            const response = await fetch(`/api/restaurants?query=${query}`);
+            const data = await response.json();
 
-    // Filtreleme işlemi
-    const filteredRestaurants = sampleRestaurants.filter((restaurant) => {
-        const { name, city, category } = searchFilters;
-        return (
-            (name === '' || restaurant.name.toLowerCase().includes(name.toLowerCase())) &&
-            (city === '' || restaurant.city === city) &&
-            (category === '' || restaurant.category === category)
-        );
-    });
+            if (response.ok) {
+                setRestaurants(data);
+                setError(null);
+            } else {
+                setError(data.error || 'Bir hata oluştu.');
+            }
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    const handleSearch = () => {
+        if (query.trim() === '') {
+            setError('Lütfen bir şehir veya anahtar kelime girin.');
+            return;
+        }
+        fetchRestaurants();
+    };
 
     return (
         <Layout>
-            <Box sx={{ p: 4 }}>
-                <Typography variant="h4" color="primary" sx={{ mb: 2 }}>
-                    Restaurant List
-                </Typography>
-                <FilterBar setSearchFilters={setSearchFilters} />
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 2 }}>
-                    {filteredRestaurants.length > 0 ? (
-                        filteredRestaurants.map((restaurant) => (
-                            <RestaurantCard key={restaurant.id} restaurant={restaurant} />
-                        ))
-                    ) : (
-                        <Typography variant="body1" color="textSecondary">
-                            No restaurants found.
-                        </Typography>
-                    )}
-                </Box>
-            </Box>
+            <div style={{ padding: '20px' }}>
+                <h1>Restoranlar</h1>
+                <div>
+                    <input
+                        type="text"
+                        placeholder="Şehir veya anahtar kelime girin"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        style={{ padding: '10px', marginRight: '10px' }}
+                    />
+                    <button onClick={handleSearch} style={{ padding: '10px' }}>
+                        Ara
+                    </button>
+                </div>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                <ul>
+                    {restaurants.map((restaurant) => (
+                        <li key={restaurant.id}>
+                            <strong>{restaurant.name}</strong> - {restaurant.address} ({restaurant.rating}⭐)
+                        </li>
+                    ))}
+                </ul>
+            </div>
         </Layout>
     );
-}
+};
+
+export default Restaurants;
