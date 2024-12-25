@@ -4,15 +4,17 @@ import Layout from '@/components/Layout';
 
 const RestaurantDetails = () => {
     const router = useRouter();
-    const { id } = router.query; // URL'deki 'id' parametresi
+    const { id } = router.query;
 
     const [restaurant, setRestaurant] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [liked, setLiked] = useState(false); // Beğeni durumu
 
     useEffect(() => {
         if (id) {
             fetchRestaurantDetails();
+            checkLikedStatus(); // Beğeni durumunu kontrol et
         }
     }, [id]);
 
@@ -32,6 +34,27 @@ const RestaurantDetails = () => {
         } finally {
             setLoading(false);
         }
+    };
+
+    // Beğeni durumunu kontrol et
+    const checkLikedStatus = () => {
+        const likedRestaurants = JSON.parse(localStorage.getItem('likedRestaurants')) || [];
+        setLiked(likedRestaurants.includes(id));
+    };
+
+    // Beğeni durumunu güncelle
+    const toggleLike = () => {
+        const likedRestaurants = JSON.parse(localStorage.getItem('likedRestaurants')) || [];
+        if (liked) {
+            // Beğeniyi kaldır
+            const updatedLikes = likedRestaurants.filter(restaurantId => restaurantId !== id);
+            localStorage.setItem('likedRestaurants', JSON.stringify(updatedLikes));
+        } else {
+            // Beğeniyi ekle
+            likedRestaurants.push(id);
+            localStorage.setItem('likedRestaurants', JSON.stringify(likedRestaurants));
+        }
+        setLiked(!liked);
     };
 
     if (loading) {
@@ -68,10 +91,25 @@ const RestaurantDetails = () => {
                         />
                         <p><strong>Adres:</strong> {restaurant.address}</p>
                         <p><strong>Puan:</strong> {restaurant.rating} ⭐</p>
-                        <p><strong>Toplam Yorum:</strong> {restaurant.totalRatings}</p>
-                        {restaurant.priceLevel && <p><strong>Fiyat Seviyesi:</strong> {'💵'.repeat(restaurant.priceLevel)}</p>}
+                        <p><strong>Fiyat Seviyesi:</strong> {restaurant.priceLevel ? '₺'.repeat(restaurant.priceLevel) : 'Bilinmiyor'}</p>
+                        <button
+                            onClick={toggleLike}
+                            style={{
+                                padding: '10px 20px',
+                                marginTop: '10px',
+                                backgroundColor: liked ? 'red' : 'gray',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            {liked ? 'Beğeniyi Kaldır' : 'Beğen'}
+                        </button>
+
+                        {/* Çalışma Saatleri */}
                         {restaurant.openingHours && (
-                            <div>
+                            <div style={{ marginTop: '20px' }}>
                                 <strong>Çalışma Saatleri:</strong>
                                 <ul>
                                     {restaurant.openingHours.map((hour, index) => (
@@ -80,17 +118,30 @@ const RestaurantDetails = () => {
                                 </ul>
                             </div>
                         )}
+
+                        {/* Yorumlar */}
                         {restaurant.reviews && (
-                            <div>
+                            <div style={{ marginTop: '20px' }}>
                                 <strong>Yorumlar:</strong>
                                 {restaurant.reviews.map((review, index) => (
-                                    <div key={index} style={{ borderBottom: '1px solid #ccc', paddingBottom: '10px', marginBottom: '10px' }}>
-                                        <p><strong>{review.authorName}</strong> ({review.rating} ⭐)</p>
+                                    <div
+                                        key={index}
+                                        style={{
+                                            borderBottom: '1px solid #ccc',
+                                            paddingBottom: '10px',
+                                            marginBottom: '10px',
+                                        }}
+                                    >
+                                        <p>
+                                            <strong>{review.authorName}</strong> ({review.rating} ⭐)
+                                        </p>
                                         <p>{review.text}</p>
                                     </div>
                                 ))}
                             </div>
                         )}
+
+                        {/* Telefon ve Web Sitesi */}
                         {restaurant.phone && <p><strong>Telefon:</strong> {restaurant.phone}</p>}
                         {restaurant.website && (
                             <p>
