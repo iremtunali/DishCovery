@@ -69,6 +69,28 @@ const RestaurantDetails = () => {
                         <p><strong>Adres:</strong> {restaurant.address}</p>
                         <p><strong>Puan:</strong> {restaurant.rating} ⭐</p>
                         <p><strong>Toplam Yorum:</strong> {restaurant.totalRatings}</p>
+                        {restaurant.priceLevel && <p><strong>Fiyat Seviyesi:</strong> {'💵'.repeat(restaurant.priceLevel)}</p>}
+                        {restaurant.openingHours && (
+                            <div>
+                                <strong>Çalışma Saatleri:</strong>
+                                <ul>
+                                    {restaurant.openingHours.map((hour, index) => (
+                                        <li key={index}>{hour}</li>
+                                    ))}
+                                </ul>
+                            </div>
+                        )}
+                        {restaurant.reviews && (
+                            <div>
+                                <strong>Yorumlar:</strong>
+                                {restaurant.reviews.map((review, index) => (
+                                    <div key={index} style={{ borderBottom: '1px solid #ccc', paddingBottom: '10px', marginBottom: '10px' }}>
+                                        <p><strong>{review.authorName}</strong> ({review.rating} ⭐)</p>
+                                        <p>{review.text}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                         {restaurant.phone && <p><strong>Telefon:</strong> {restaurant.phone}</p>}
                         {restaurant.website && (
                             <p>

@@ -25,6 +25,13 @@ export default async function handler(req, res) {
             totalRatings: data.result.user_ratings_total,
             phone: data.result.formatted_phone_number || null,
             website: data.result.website || null,
+            priceLevel: data.result.price_level || null,
+            openingHours: data.result.opening_hours?.weekday_text || null,
+            reviews: data.result.reviews?.map(review => ({
+                authorName: review.author_name,
+                rating: review.rating,
+                text: review.text,
+            })) || null,
             photoUrl: data.result.photos?.[0]?.photo_reference
                 ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=800&photoreference=${data.result.photos[0].photo_reference}&key=${apiKey}`
                 : '/placeholder.jpg', // Varsayılan resim
