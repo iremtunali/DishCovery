@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Layout from '@/components/Layout';
+import Link from 'next/link';
 
 const Restaurants = () => {
     const [restaurants, setRestaurants] = useState([]);
@@ -33,8 +34,8 @@ const Restaurants = () => {
     return (
         <Layout>
             <div style={{ padding: '20px' }}>
-                <h1>Restoranlar</h1>
-                <div>
+                <h1 style={{ textAlign: 'center' }}>Restoranlar</h1>
+                <div style={{ marginBottom: '20px', textAlign: 'center' }}>
                     <input
                         type="text"
                         placeholder="Şehir veya anahtar kelime girin"
@@ -46,14 +47,42 @@ const Restaurants = () => {
                         Ara
                     </button>
                 </div>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                <ul>
+                {error && <p style={{ color: 'red', textAlign: 'center' }}>{error}</p>}
+                <div
+                    style={{
+                        display: 'grid',
+                        gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                        gap: '20px',
+                    }}
+                >
                     {restaurants.map((restaurant) => (
-                        <li key={restaurant.id}>
-                            <strong>{restaurant.name}</strong> - {restaurant.address} ({restaurant.rating}⭐)
-                        </li>
+                        <div
+                            key={restaurant.id}
+                            style={{
+                                border: '1px solid #ccc',
+                                borderRadius: '8px',
+                                padding: '10px',
+                                textAlign: 'center',
+                            }}
+                        >
+                            <Link href={`/restaurants/${restaurant.id}`}>
+                                <img
+                                    src={restaurant.photoUrl} // API'den dönen resim URL'sini buraya bağlayın
+                                    alt={restaurant.name}
+                                    style={{
+                                        width: '100%',
+                                        height: '150px',
+                                        objectFit: 'cover',
+                                        borderRadius: '8px',
+                                    }}
+                                />
+                            </Link>
+                            <h3>{restaurant.name}</h3>
+                            <p>{restaurant.address}</p>
+                            <p>{restaurant.rating} ⭐</p>
+                        </div>
                     ))}
-                </ul>
+                </div>
             </div>
         </Layout>
     );

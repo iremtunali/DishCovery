@@ -23,6 +23,9 @@ export default async function handler(req, res) {
             address: place.formatted_address,
             rating: place.rating,
             totalRatings: place.user_ratings_total,
+            photoUrl: place.photos
+                ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${apiKey}`
+                : '/placeholder.jpg', // Fotoğraf yoksa yer tutucu resim
         }));
 
         return res.status(200).json(restaurants);
