@@ -33,36 +33,120 @@ const HomePage = () => {
 
     return (
         <Layout>
-            <div className="container mx-auto p-6">
-                <h1 className="text-3xl font-bold text-center text-gray-800 my-6">
-                    Popüler Restoranlar
-                </h1>
-                {loading && <p className="text-center text-lg text-gray-500">Yükleniyor...</p>}
-                {error && <p className="text-center text-red-500">{error}</p>}
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div
+                style={{
+                    background: "linear-gradient(135deg, #ff7e29, #4caf50)", // Degrade arka plan
+                    minHeight: "100vh",
+                    padding: "50px 20px",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    justifyContent: "flex-start",
+                }}
+            >
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        textAlign: "center",
+                        marginBottom: "30px",
+                    }}
+                >
+                    <img
+                        src="/logo.jpg"
+                        alt="DishCovery Logo"
+                        style={{
+                            width: "150px",
+                            height: "auto",
+                            marginBottom: "10px",
+                            borderRadius: "8px",
+                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                        }}
+                    />
+                    <h1
+                        style={{
+                            fontSize: "32px",
+                            fontWeight: "bold",
+                            color: "#fff",
+                            marginTop: "0", // Üstte fazladan boşluk bırakmaz
+                            marginBottom: "5px",
+                        }}
+                    >
+                        Popüler Restoranlar
+                    </h1>
+                    <p
+                        style={{
+                            fontSize: "18px",
+                            color: "#fff",
+                            marginTop: "0", // Üstte fazladan boşluk bırakmaz
+                        }}
+                    >
+                        En iyi restoranları keşfedin!
+                    </p>
+                </div>
+
+
+                {loading && (
+                    <p style={{color: "#fff", fontSize: "18px"}}>Yükleniyor...</p>
+                )}
+                {error && (
+                    <p style={{color: "red", fontSize: "18px"}}>{error}</p>
+                )}
+                <div
+                    style={{
+                        marginTop: "30px",
+                        display: "grid",
+                        gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+                        gap: "20px",
+                        width: "100%",
+                        maxWidth: "1200px",
+                    }}
+                >
                     {popularRestaurants.map((restaurant) => (
-                        <Link
+                        <div
                             key={restaurant.id}
-                            href={`/restaurants/${restaurant.id}`} // Dinamik rota
-                            className="block bg-white shadow-md rounded-lg overflow-hidden transform transition hover:scale-105"
+                            style={{
+                                border: "1px solid #ccc",
+                                borderRadius: "10px",
+                                overflow: "hidden",
+                                boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+                                backgroundColor: "white",
+                                transition: "transform 0.3s, box-shadow 0.3s",
+                                cursor: "pointer",
+                            }}
+                            onMouseOver={(e) => {
+                                e.currentTarget.style.transform = "scale(1.05)";
+                                e.currentTarget.style.boxShadow =
+                                    "0 8px 16px rgba(0, 0, 0, 0.2)";
+                            }}
+                            onMouseOut={(e) => {
+                                e.currentTarget.style.transform = "scale(1)";
+                                e.currentTarget.style.boxShadow =
+                                    "0 4px 8px rgba(0, 0, 0, 0.1)";
+                            }}
                         >
-                            <img
-                                src={restaurant.imageUrl}
-                                alt={restaurant.name}
-                                className="w-full h-40 object-cover"
-                            />
-                            <div className="p-4">
-                                <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                                    {restaurant.name}
-                                </h3>
-                                <p className="text-sm text-gray-600 mb-2">
-                                    {restaurant.address}
-                                </p>
-                                <p className="text-yellow-500 font-bold text-center">
-                                    ⭐ {restaurant.rating}
-                                </p>
-                            </div>
-                        </Link>
+                            <Link href={`/restaurants/${restaurant.id}`} legacyBehavior>
+                                <a>
+                                    <img
+                                        src={restaurant.imageUrl}
+                                        alt={restaurant.name}
+                                        style={{
+                                            width: "100%",
+                                            height: "150px",
+                                            objectFit: "cover",
+                                        }}
+                                    />
+                                    <div style={{padding: "10px", textAlign: "center"}}>
+                                        <h3 style={{margin: "10px 0", color: "#333"}}>
+                                            {restaurant.name}
+                                        </h3>
+                                        <p style={{color: "#555"}}>{restaurant.address}</p>
+                                        <p style={{color: "#ff9800"}}>⭐ {restaurant.rating}</p>
+                                    </div>
+                                </a>
+                            </Link>
+                        </div>
                     ))}
                 </div>
             </div>

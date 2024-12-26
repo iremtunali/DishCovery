@@ -1,22 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import Layout from '@/components/Layout';
+import Link from 'next/link';
 
-const ProfilePage = () => {
-    const user = {
-        username: "john_doe",
-        profilePicture: "/ProfilePhoto.jpg",
-        bio: "Food lover, traveler, and photographer 🌍🍴📸",
-        postsCount: 34,
-        followersCount: 1200,
-        followingCount: 200,
-    };
-
+const FavoritesPage = () => {
     const [favorites, setFavorites] = useState([]);
+    const [sortOption, setSortOption] = useState("highestRated");
 
     useEffect(() => {
-        // Beğenilen restoranları al
         const likedRestaurants = JSON.parse(localStorage.getItem('likedRestaurants')) || [];
-        // Beğenilen restoranların detaylarını getir
         fetchFavorites(likedRestaurants);
     }, []);
 
@@ -44,39 +35,157 @@ const ProfilePage = () => {
         setFavorites(favoriteDetails);
     };
 
+    const handleSort = (option) => {
+        let sortedFavorites = [...favorites];
+        if (option === "highestRated") {
+            sortedFavorites.sort((a, b) => b.rating - a.rating);
+        } else if (option === "alphabetical") {
+            sortedFavorites.sort((a, b) => a.name.localeCompare(b.name));
+        }
+        setFavorites(sortedFavorites);
+        setSortOption(option);
+    };
+
+    const handleRemoveFavorite = (id) => {
+        const updatedFavorites = favorites.filter((favorite) => favorite.id !== id);
+        setFavorites(updatedFavorites);
+        localStorage.setItem('likedRestaurants', JSON.stringify(updatedFavorites.map((f) => f.id)));
+    };
+
     return (
         <Layout>
-            <div style={{ textAlign: 'center', margin: '20px 0' }}>
-                <img src={user.profilePicture} alt='Profile' style={{ width: '100px', borderRadius: '50%' }} />
-                <h2>{user.username}</h2>
-                <p>{user.bio}</p>
-                <div>
-                    <strong>{user.postsCount}</strong> Posts | <strong>{user.followersCount}</strong> Followers |{' '}
-                    <strong>{user.followingCount}</strong> Following
-                </div>
-            </div>
-            <h3 style={{ margin: '20px 0' }}>❤️ Favorites</h3>
-            <div style={{ display: 'flex', gap: '20px', flexWrap: 'wrap', justifyContent: 'center' }}>
-                {favorites.map((favorite) => (
-                    <div key={favorite.id} style={{ border: '1px solid #ccc', padding: '10px', width: '200px' }}>
-                        <img src={favorite.imageUrl} alt={favorite.name} style={{ width: '100%' }} />
-                        <h4>{favorite.name}</h4>
-                        <p>{favorite.address}</p>
-                        <p>Rating: {favorite.rating} ⭐</p>
-                        {favorite.phone && <p><strong>Telefon:</strong> {favorite.phone}</p>}
-                        {favorite.website && (
-                            <p>
-                                <strong>Web Sitesi:</strong>{' '}
-                                <a href={favorite.website} target="_blank" rel="noopener noreferrer">
-                                    {favorite.website}
-                                </a>
-                            </p>
-                        )}
+            <div
+                style={{
+                    background: 'linear-gradient(135deg, #ff7e29, #4caf50)', // Restaurants sayfasındaki degrade renkler
+                    color: '#fff',
+                    minHeight: '100vh',
+                    padding: '20px',
+                }}
+            >
+                <div style={{ textAlign: 'center' }}>
+                    <h1 style={{ fontSize: '32px', marginBottom: '20px' }}>❤️ Favori Restoranlarım</h1>
+                    <div style={{ marginBottom: '20px' }}>
+                        <button
+                            onClick={() => handleSort("highestRated")}
+                            style={{
+                                padding: '10px 20px',
+                                marginRight: '10px',
+                                backgroundColor: sortOption === "highestRated" ? '#fff' : '#ddd',
+                                color: sortOption === "highestRated" ? '#4CAF50' : '#000',
+                                border: 'none',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            En Yüksek Puan
+                        </button>
+                        <button
+                            onClick={() => handleSort("alphabetical")}
+                            style={{
+                                padding: '10px 20px',
+                                backgroundColor: sortOption === "alphabetical" ? '#fff' : '#ddd',
+                                color: sortOption === "alphabetical" ? '#4CAF50' : '#000',
+                                border: 'none',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                            }}
+                        >
+                            Alfabetik
+                        </button>
                     </div>
-                ))}
+
+                    {favorites.length === 0 ? (
+                        <div style={{ marginTop: '50px', color: '#ddd' }}>
+                            <h2>Hiç favori restoranınız yok!</h2>
+                            <p>Favori restoranlarınızı ekleyerek buradan görüntüleyebilirsiniz. 😊</p>
+                        </div>
+                    ) : (
+                        <div
+                            style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
+                                gap: '20px',
+                                padding: '20px',
+                            }}
+                        >
+                            {favorites.map((favorite) => (
+                                <div
+                                    key={favorite.id}
+                                    style={{
+                                        borderRadius: '10px',
+                                        overflow: 'hidden',
+                                        boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+                                        backgroundColor: '#fff',
+                                        transition: 'transform 0.3s, box-shadow 0.3s',
+                                        cursor: 'pointer',
+                                    }}
+                                    onMouseOver={(e) => {
+                                        e.currentTarget.style.transform = 'scale(1.05)';
+                                        e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
+                                    }}
+                                    onMouseOut={(e) => {
+                                        e.currentTarget.style.transform = 'scale(1)';
+                                        e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
+                                    }}
+                                >
+                                    <img
+                                        src={favorite.imageUrl}
+                                        alt={favorite.name}
+                                        style={{
+                                            width: '100%',
+                                            height: '150px',
+                                            objectFit: 'cover',
+                                        }}
+                                    />
+                                    <div style={{ padding: '15px', textAlign: 'center' }}>
+                                        <h4 style={{ margin: '10px 0', fontSize: '18px', color: '#333' }}>
+                                            {favorite.name}
+                                        </h4>
+                                        <p style={{ fontSize: '14px', color: '#555', marginBottom: '5px' }}>
+                                            {favorite.address}
+                                        </p>
+                                        <p style={{ fontSize: '14px', color: '#777' }}>
+                                            Rating: <strong>{favorite.rating} ⭐</strong>
+                                        </p>
+                                        <div style={{ marginTop: '10px' }}>
+                                            <Link href={`/restaurants/${favorite.id}`}>
+                                                <button
+                                                    style={{
+                                                        padding: '8px 15px',
+                                                        backgroundColor: '#4CAF50',
+                                                        color: '#fff',
+                                                        borderRadius: '5px',
+                                                        border: 'none',
+                                                        cursor: 'pointer',
+                                                        marginRight: '10px',
+                                                    }}
+                                                >
+                                                    Detayları Gör
+                                                </button>
+                                            </Link>
+                                            <button
+                                                onClick={() => handleRemoveFavorite(favorite.id)}
+                                                style={{
+                                                    padding: '8px 15px',
+                                                    backgroundColor: '#f44336',
+                                                    color: '#fff',
+                                                    borderRadius: '5px',
+                                                    border: 'none',
+                                                    cursor: 'pointer',
+                                                }}
+                                            >
+                                                Favorilerden Kaldır
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                </div>
             </div>
         </Layout>
     );
 };
 
-export default ProfilePage;
+export default FavoritesPage;

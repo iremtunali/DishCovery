@@ -9,12 +9,12 @@ const RestaurantDetails = () => {
     const [restaurant, setRestaurant] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [liked, setLiked] = useState(false); // Beğeni durumu
+    const [liked, setLiked] = useState(false);
 
     useEffect(() => {
         if (id) {
             fetchRestaurantDetails();
-            checkLikedStatus(); // Beğeni durumunu kontrol et
+            checkLikedStatus();
         }
     }, [id]);
 
@@ -36,21 +36,17 @@ const RestaurantDetails = () => {
         }
     };
 
-    // Beğeni durumunu kontrol et
     const checkLikedStatus = () => {
         const likedRestaurants = JSON.parse(localStorage.getItem('likedRestaurants')) || [];
         setLiked(likedRestaurants.includes(id));
     };
 
-    // Beğeni durumunu güncelle
     const toggleLike = () => {
         const likedRestaurants = JSON.parse(localStorage.getItem('likedRestaurants')) || [];
         if (liked) {
-            // Beğeniyi kaldır
             const updatedLikes = likedRestaurants.filter(restaurantId => restaurantId !== id);
             localStorage.setItem('likedRestaurants', JSON.stringify(updatedLikes));
         } else {
-            // Beğeniyi ekle
             likedRestaurants.push(id);
             localStorage.setItem('likedRestaurants', JSON.stringify(likedRestaurants));
         }
@@ -60,7 +56,7 @@ const RestaurantDetails = () => {
     if (loading) {
         return (
             <Layout>
-                <p>Yükleniyor...</p>
+                <p className="text-center text-xl py-10">Yükleniyor...</p>
             </Layout>
         );
     }
@@ -68,92 +64,99 @@ const RestaurantDetails = () => {
     if (error) {
         return (
             <Layout>
-                <p style={{ color: 'red' }}>{error}</p>
+                <p className="text-red-500 text-center py-10">{error}</p>
             </Layout>
         );
     }
 
+    const renderOpeningHours = () => (
+        <div className="mt-10 border-t border-gray-200 pt-6">
+            <h4 className="text-2xl font-bold mb-4">Çalışma Saatleri:</h4>
+            <ul className="list-disc list-inside pl-4 space-y-2">
+                {restaurant.openingHours.map((hour, index) => (
+                    <li key={index} className="text-lg text-gray-700">{hour}</li>
+                ))}
+            </ul>
+        </div>
+    );
+
+    const renderReviews = () => (
+        <div className="mt-10 border-t border-gray-200 pt-6">
+            <h4 className="text-2xl font-bold mb-4">Yorumlar:</h4>
+            <div className="space-y-4">
+                {restaurant.reviews.map((review, index) => (
+                    <div key={index} className="border border-gray-200 p-4 rounded-lg shadow-lg">
+                        <p className="font-bold text-lg mb-2 text-gray-800">{review.authorName} ({review.rating} ⭐)</p>
+                        <p className="text-lg text-gray-700">{review.text}</p>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+
+    const renderContactInfo = () => (
+        <div className="mt-10 text-lg space-y-4 border-t border-gray-200 pt-6">
+            {restaurant.phone && <p className="text-gray-600"><strong>Telefon:</strong> {restaurant.phone}</p>}
+            {restaurant.website && (
+                <p className="text-gray-600">
+                    <strong>Web Sitesi:</strong>{' '}
+                    <a href={restaurant.website} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline">
+                        {restaurant.website}
+                    </a>
+                </p>
+            )}
+        </div>
+    );
+
     return (
         <Layout>
-            <div style={{ padding: '20px' }}>
+            <div className="container mx-auto p-5">
                 {restaurant ? (
-                    <div>
-                        <h1>{restaurant.name}</h1>
-                        <img
-                            src={restaurant.photoUrl}
-                            alt={restaurant.name}
-                            style={{
-                                width: '100%',
-                                maxHeight: '400px',
-                                objectFit: 'cover',
-                                borderRadius: '8px',
-                            }}
-                        />
-                        <p><strong>Adres:</strong> {restaurant.address}</p>
-                        <p><strong>Puan:</strong> {restaurant.rating} ⭐</p>
-                        <p><strong>Fiyat Seviyesi:</strong> {restaurant.priceLevel ? '₺'.repeat(restaurant.priceLevel) : 'Bilinmiyor'}</p>
-                        <button
-                            onClick={toggleLike}
-                            style={{
-                                padding: '10px 20px',
-                                marginTop: '10px',
-                                backgroundColor: liked ? 'red' : 'gray',
-                                color: 'white',
-                                border: 'none',
-                                borderRadius: '5px',
-                                cursor: 'pointer',
-                            }}
-                        >
-                            {liked ? 'Beğeniyi Kaldır' : 'Beğen'}
-                        </button>
+                    <div className="bg-white rounded-lg shadow-lg p-6">
+                        <h1 className="text-5xl font-bold mb-6 text-center text-gray-800">{restaurant.name}</h1>
+                        <div className="flex justify-center mb-8">
+                            <img
+                                src={restaurant.photoUrl}
+                                alt={restaurant.name}
+                                className="w-full max-w-4xl object-cover rounded-lg shadow-md"
+                            />
+                        </div>
+                        <div className="text-lg space-y-4 mb-8">
+                            <p className="text-gray-600"><strong>Adres:</strong> {restaurant.address}</p>
+                            <p className="text-gray-600"><strong>Puan:</strong> {restaurant.rating} ⭐</p>
+                            <p className="text-gray-600"><strong>Fiyat Seviyesi:</strong> {restaurant.priceLevel ? '₺'.repeat(restaurant.priceLevel) : 'Bilinmiyor'}</p>
+                        </div>
+                        <div className="flex justify-center mb-10">
+                            <button
+                                onClick={toggleLike}
+                                className={`px-6 py-3 text-white rounded-full shadow-md flex items-center justify-center space-x-2 focus:outline-none transition-transform transform ${
+                                    liked ? 'bg-red-500' : 'bg-gray-500'
+                                } hover:scale-105`}
+                            >
+                                <span className="leading-none">{liked ? 'Beğeniyi Kaldır' : 'Beğen'}</span>
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    viewBox="0 0 24 24"
+                                    fill={liked ? 'currentColor' : 'none'}
+                                    stroke={liked ? 'currentColor' : 'white'}
+                                    className={`w-6 h-6 ${liked ? 'text-red-500' : 'text-white'}`}
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
+                                    />
+                                </svg>
+                            </button>
+                        </div>
 
-                        {/* Çalışma Saatleri */}
-                        {restaurant.openingHours && (
-                            <div style={{ marginTop: '20px' }}>
-                                <strong>Çalışma Saatleri:</strong>
-                                <ul>
-                                    {restaurant.openingHours.map((hour, index) => (
-                                        <li key={index}>{hour}</li>
-                                    ))}
-                                </ul>
-                            </div>
-                        )}
-
-                        {/* Yorumlar */}
-                        {restaurant.reviews && (
-                            <div style={{ marginTop: '20px' }}>
-                                <strong>Yorumlar:</strong>
-                                {restaurant.reviews.map((review, index) => (
-                                    <div
-                                        key={index}
-                                        style={{
-                                            borderBottom: '1px solid #ccc',
-                                            paddingBottom: '10px',
-                                            marginBottom: '10px',
-                                        }}
-                                    >
-                                        <p>
-                                            <strong>{review.authorName}</strong> ({review.rating} ⭐)
-                                        </p>
-                                        <p>{review.text}</p>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-
-                        {/* Telefon ve Web Sitesi */}
-                        {restaurant.phone && <p><strong>Telefon:</strong> {restaurant.phone}</p>}
-                        {restaurant.website && (
-                            <p>
-                                <strong>Web Sitesi:</strong>{' '}
-                                <a href={restaurant.website} target="_blank" rel="noopener noreferrer">
-                                    {restaurant.website}
-                                </a>
-                            </p>
-                        )}
+                        {restaurant.openingHours && renderOpeningHours()}
+                        {restaurant.reviews && renderReviews()}
+                        {renderContactInfo()}
                     </div>
                 ) : (
-                    <p>Restoran bilgileri bulunamadı.</p>
+                    <p className="text-center text-lg">Restoran bilgileri bulunamadı.</p>
                 )}
             </div>
         </Layout>

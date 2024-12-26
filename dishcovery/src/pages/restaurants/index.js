@@ -44,22 +44,48 @@ const Restaurants = () => {
                     justifyContent: 'center',
                 }}
             >
-                <div style={{ textAlign: 'center', marginBottom: '30px' }}>
+                <div
+                    style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        textAlign: "center",
+                        marginBottom: "30px",
+                    }}
+                >
                     <img
                         src="/logo.jpg"
                         alt="DishCovery Logo"
                         style={{
-                            width: '150px',
-                            height: 'auto',
-                            marginBottom: '10px',
-                            borderRadius: '8px',
-                            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                            width: "150px",
+                            height: "auto",
+                            marginBottom: "10px",
+                            borderRadius: "8px",
+                            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
                         }}
                     />
-                    <p style={{ fontSize: '20px', color: '#fff', marginTop: '10px' }}>
+                    <h1
+                        style={{
+                            fontSize: "32px",
+                            fontWeight: "bold",
+                            color: "#fff",
+                            marginTop: "0", // Üstte fazladan boşluk bırakmaz
+                            marginBottom: "5px",
+                        }}
+                    >
+                        Popüler Restoranlar
+                    </h1>
+                    <p
+                        style={{
+                            fontSize: "18px",
+                            color: "#fff",
+                            marginTop: "0", // Üstte fazladan boşluk bırakmaz
+                        }}
+                    >
                         En iyi restoranları keşfedin!
                     </p>
                 </div>
+
                 <div
                     style={{
                         backgroundColor: 'rgba(255, 255, 255, 0.9)',
@@ -71,8 +97,8 @@ const Restaurants = () => {
                         width: '100%',
                     }}
                 >
-                    <h1 style={{ fontSize: '24px', marginBottom: '20px', color: '#333' }}>Restoran Ara</h1>
-                    <div style={{ marginBottom: '20px' }}>
+                    <h1 style={{fontSize: '24px', marginBottom: '20px', color: '#333'}}>Restoran Ara</h1>
+                    <div style={{marginBottom: '20px'}}>
                         <input
                             type="text"
                             placeholder="Şehir veya anahtar kelime girin"
@@ -111,7 +137,7 @@ const Restaurants = () => {
                             Ara
                         </button>
                     </div>
-                    {error && <p style={{ color: 'red', marginTop: '10px' }}>{error}</p>}
+                    {error && <p style={{color: 'red', marginTop: '10px'}}>{error}</p>}
                 </div>
                 {restaurants.length > 0 && (
                     <div
@@ -158,7 +184,7 @@ const Restaurants = () => {
                                         }}
                                     />
                                 </Link>
-                                <div style={{ padding: '10px', textAlign: 'center' }}>
+                                <div style={{padding: '10px', textAlign: 'center'}}>
                                     <h3>{restaurant.name}</h3>
                                     <p>{restaurant.address}</p>
                                     <p>{restaurant.rating} ⭐</p>
