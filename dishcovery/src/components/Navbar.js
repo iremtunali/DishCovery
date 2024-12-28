@@ -5,23 +5,20 @@ const Navbar = () => {
     const [hovered, setHovered] = useState(null);
 
     return (
-        <nav style={styles.navbar}>
-            <div style={styles.logo}>
-                <Link href="/" style={styles.logoLink}>
+        <nav className="flex justify-between items-center py-4 px-6 bg-gradient-to-r from-orange-500 to-yellow-400 shadow-md sticky top-0 z-50">
+            <div className="text-white font-bold text-2xl">
+                <Link href="/" className="font-poppins">
                     Dishcovery
                 </Link>
             </div>
-            <div style={styles.links}>
+            <div className="flex gap-5">
                 {["🏠", "🔍", "👤"].map((icon, index) => (
                     <Link
                         key={index}
                         href={icon === "🏠" ? "/" : icon === "🔍" ? "/restaurants" : "/profile"}
-                        style={{
-                            ...styles.iconLink,
-                            transform: hovered === index ? "scale(1.2)" : "scale(1)",
-                            color: hovered === index ? "#FFB703" : "#FFF", // Hover durumunda değişen renk
-                            transition: "transform 0.2s ease, color 0.3s",
-                        }}
+                        className={`text-white text-lg transition-transform duration-200 ${
+                            hovered === index ? "scale-110 text-yellow-200" : ""
+                        }`}
                         onMouseOver={() => setHovered(index)}
                         onMouseOut={() => setHovered(null)}
                     >
@@ -31,40 +28,6 @@ const Navbar = () => {
             </div>
         </nav>
     );
-};
-
-const styles = {
-    navbar: {
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "15px 30px",
-        background: "linear-gradient(90deg, #FF7E29, #FFB703)", // Degrade turuncu tonları
-        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)", // Daha belirgin gölge
-        position: "sticky",
-        top: 0,
-        zIndex: 1000,
-    },
-    logo: {
-        fontSize: "24px",
-        fontWeight: "bold",
-    },
-    logoLink: {
-        textDecoration: "none",
-        color: "#FFF",
-        fontFamily: "'Poppins', sans-serif",
-        fontSize: "28px",
-    },
-    links: {
-        display: "flex",
-        gap: "20px",
-    },
-    iconLink: {
-        fontSize: "22px", // İkon boyutu biraz büyütüldü
-        color: "#FFF",
-        textDecoration: "none",
-        cursor: "pointer",
-    },
 };
 
 export default Navbar;
