@@ -7,6 +7,7 @@ const HomePage = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
 
+    //fetchPopularRestaurants: /api/highRatedRestaurants adresinden REST API çağrısı yapar
     const fetchPopularRestaurants = async () => {
         setLoading(true);
         setError(null);
