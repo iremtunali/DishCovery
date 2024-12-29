@@ -3,14 +3,17 @@ import Layout from '@/components/Layout';
 import Link from 'next/link';
 
 const FavoritesPage = () => {
+    // Favori restoranlar ve sıralama seçeneği için state tanımları
     const [favorites, setFavorites] = useState([]);
     const [sortOption, setSortOption] = useState("highestRated");//Restoranların sıralama seçeneği (başlangıçta "highestRated")
 
+    // Sayfa yüklendiğinde localStorage'daki favori restoranları getir
     useEffect(() => {
         const likedRestaurants = JSON.parse(localStorage.getItem('likedRestaurants')) || [];
         fetchFavorites(likedRestaurants);//fetchFavorites fonksiyonu çağrılarak restoran detayları sunucudan çekilir
     }, []);
 
+    // Favori restoranların detaylarını API'den çek ve state'e ata
     const fetchFavorites = async (likedRestaurants) => {
         const favoriteDetails = [];
         for (const restaurantId of likedRestaurants) {
@@ -18,6 +21,7 @@ const FavoritesPage = () => {
                 const response = await fetch(`/api/restaurantDetails?id=${restaurantId}`);
                 const data = await response.json();
                 if (response.ok) {
+                    // Restoran detaylarını listeye ekle
                     favoriteDetails.push({
                         id: restaurantId,
                         name: data.name,
@@ -32,31 +36,33 @@ const FavoritesPage = () => {
                 console.error('Favori restoran detayları getirilemedi:', error);
             }
         }
-        setFavorites(favoriteDetails);
+        setFavorites(favoriteDetails); // Restoranları state'e aktar
     };
 
+    // Favori restoranları sıralama işlemi
     const handleSort = (option) => {
         let sortedFavorites = [...favorites];
         if (option === "highestRated") {
-            sortedFavorites.sort((a, b) => b.rating - a.rating);
+            sortedFavorites.sort((a, b) => b.rating - a.rating); // En yüksek puana göre sırala
         } else if (option === "alphabetical") {
-            sortedFavorites.sort((a, b) => a.name.localeCompare(b.name));
+            sortedFavorites.sort((a, b) => a.name.localeCompare(b.name)); // Alfabetik sırala
         }
         setFavorites(sortedFavorites);
-        setSortOption(option);
+        setSortOption(option); // Seçilen sıralama seçeneğini güncelle
     };
 
+    // Bir restoranı favorilerden kaldırma işlemi
     const handleRemoveFavorite = (id) => {
-        const updatedFavorites = favorites.filter((favorite) => favorite.id !== id);
+        const updatedFavorites = favorites.filter((favorite) => favorite.id !== id); // Seçilen restoranı çıkar
         setFavorites(updatedFavorites);
-        localStorage.setItem('likedRestaurants', JSON.stringify(updatedFavorites.map((f) => f.id)));
+        localStorage.setItem('likedRestaurants', JSON.stringify(updatedFavorites.map((f) => f.id))); // Güncellenmiş listeyi kaydet
     };
 
     return (
         <Layout>
             <div
                 style={{
-                    background: 'linear-gradient(135deg, #ff7e29, #4caf50)', // Restaurants sayfasındaki degrade renkler
+                    background: 'linear-gradient(135deg, #ff7e29, #4caf50)', // Sayfa arka planı
                     color: '#fff',
                     minHeight: '100vh',
                     padding: '20px',
@@ -65,6 +71,7 @@ const FavoritesPage = () => {
                 <div style={{ textAlign: 'center' }}>
                     <h1 style={{ fontSize: '32px', marginBottom: '20px' }}>❤️ Favori Restoranlarım</h1>
                     <div style={{ marginBottom: '20px' }}>
+                        {/* Sıralama butonları */}
                         <button
                             onClick={() => handleSort("highestRated")}
                             style={{
@@ -94,12 +101,14 @@ const FavoritesPage = () => {
                         </button>
                     </div>
 
+                    {/* Eğer favori restoran yoksa bir bilgilendirme göster */}
                     {favorites.length === 0 ? (
                         <div style={{ marginTop: '50px', color: '#ddd' }}>
                             <h2>Hiç favori restoranınız yok!</h2>
                             <p>Favori restoranlarınızı ekleyerek buradan görüntüleyebilirsiniz. 😊</p>
                         </div>
                     ) : (
+                        // Favori restoranların listesi
                         <div
                             style={{
                                 display: 'grid',
@@ -120,11 +129,11 @@ const FavoritesPage = () => {
                                         cursor: 'pointer',
                                     }}
                                     onMouseOver={(e) => {
-                                        e.currentTarget.style.transform = 'scale(1.05)';
+                                        e.currentTarget.style.transform = 'scale(1.05)'; // Hover efekt
                                         e.currentTarget.style.boxShadow = '0 8px 16px rgba(0, 0, 0, 0.2)';
                                     }}
                                     onMouseOut={(e) => {
-                                        e.currentTarget.style.transform = 'scale(1)';
+                                        e.currentTarget.style.transform = 'scale(1)'; // Hover'dan çıkınca eski haline dön
                                         e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.1)';
                                     }}
                                 >
@@ -138,6 +147,7 @@ const FavoritesPage = () => {
                                         }}
                                     />
                                     <div style={{ padding: '15px', textAlign: 'center' }}>
+                                        {/* Restoran detayları */}
                                         <h4 style={{ margin: '10px 0', fontSize: '18px', color: '#333' }}>
                                             {favorite.name}
                                         </h4>
@@ -149,6 +159,7 @@ const FavoritesPage = () => {
                                         </p>
                                         <div style={{ marginTop: '10px' }}>
                                             <Link href={`/restaurants/${favorite.id}`}>
+                                                {/* Restoran detaylarına git butonu */}
                                                 <button
                                                     style={{
                                                         padding: '8px 15px',
@@ -163,6 +174,7 @@ const FavoritesPage = () => {
                                                     Detayları Gör
                                                 </button>
                                             </Link>
+                                            {/* Favorilerden kaldır butonu */}
                                             <button
                                                 onClick={() => handleRemoveFavorite(favorite.id)}
                                                 style={{
