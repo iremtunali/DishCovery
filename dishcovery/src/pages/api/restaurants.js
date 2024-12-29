@@ -3,7 +3,7 @@ export default async function handler(req, res) {
     const apiKey = process.env.GOOGLE_API_KEY; // .env.local'dan gelen Google API anahtarı
 
     if (!query) {
-        return res.status(400).json({ error: "Query parametresi eksik." });
+        return res.status(400).json({ error: "Query parametresi eksik." });//Eğer query sağlanmamışsa, HTTP 400 (Bad Request) hatası döndürülür.
     }
 
     const apiUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurants+in+${query}&key=${apiKey}`;
@@ -13,7 +13,7 @@ export default async function handler(req, res) {
         const data = await response.json();
 
         if (data.error_message) {
-            return res.status(500).json({ error: data.error_message });
+            return res.status(500).json({ error: data.error_message });//API'den dönen hata mesajı varsa, istemciye HTTP 500 (Internal Server Error) hatası olarak iletilir.
         }
 
         // Restoran verilerini formatlıyoruz
@@ -28,7 +28,7 @@ export default async function handler(req, res) {
                 : '/placeholder.jpg', // Fotoğraf yoksa yer tutucu resim
         }));
 
-        return res.status(200).json(restaurants);
+        return res.status(200).json(restaurants);//Formatlanan restoran listesi, HTTP 200 (OK) durum kodu ile istemciye JSON formatında döndürülür.
     } catch (error) {
         console.error("Google Places API çağrısı başarısız:", error);
         return res.status(500).json({ error: "Bir hata oluştu." });

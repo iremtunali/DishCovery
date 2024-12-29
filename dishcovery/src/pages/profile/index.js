@@ -4,11 +4,11 @@ import Link from 'next/link';
 
 const FavoritesPage = () => {
     const [favorites, setFavorites] = useState([]);
-    const [sortOption, setSortOption] = useState("highestRated");
+    const [sortOption, setSortOption] = useState("highestRated");//Restoranların sıralama seçeneği (başlangıçta "highestRated")
 
     useEffect(() => {
         const likedRestaurants = JSON.parse(localStorage.getItem('likedRestaurants')) || [];
-        fetchFavorites(likedRestaurants);
+        fetchFavorites(likedRestaurants);//fetchFavorites fonksiyonu çağrılarak restoran detayları sunucudan çekilir
     }, []);
 
     const fetchFavorites = async (likedRestaurants) => {
