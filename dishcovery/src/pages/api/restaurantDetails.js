@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-    const { id } = req.query; // URL'deki 'id' parametresi
+    const { id } = req.query; // URL'deki 'id' parametresi çağırıyoruz
     const apiKey = process.env.GOOGLE_API_KEY; // .env.local'daki Google API anahtarı
 
     if (!id) {
@@ -16,7 +16,7 @@ export default async function handler(req, res) {
             return res.status(500).json({ error: data.error_message });
         }
 
-        // Restoran detaylarını formatlıyoruz
+        // Restoran detaylarını formatlıyoruz ki ham veri yapıları okunabilir ve uygulama içinde kullanılabilir hale gelsin
         const restaurant = {
             id: data.result.place_id,
             name: data.result.name,

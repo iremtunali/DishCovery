@@ -27,7 +27,7 @@ export default async function handler(req, res) {
                 ? `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${apiKey}`
                 : '/placeholder.jpg', // Fotoğraf yoksa yer tutucu resim
         }));
-
+        //http isteği başarılı
         return res.status(200).json(restaurants);//Formatlanan restoran listesi, HTTP 200 (OK) durum kodu ile istemciye JSON formatında döndürülür.
     } catch (error) {
         console.error("Google Places API çağrısı başarısız:", error);
