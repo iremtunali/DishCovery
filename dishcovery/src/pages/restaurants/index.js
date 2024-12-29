@@ -73,7 +73,7 @@ const Restaurants = () => {
                             marginBottom: "5px",
                         }}
                     >
-                        Popüler Restoranlar
+                        Restoranlar
                     </h1>
                     <p
                         style={{

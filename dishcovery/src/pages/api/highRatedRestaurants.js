@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-    const apiKey = process.env.GOOGLE_API_KEY; // Google API anahtarı
+    const apiKey = process.env.GOOGLE_API_KEY; //.env dosyasında tanımlanan Google API anahtarı
 
     const apiUrl = `https://maps.googleapis.com/maps/api/place/textsearch/json?query=popular+restaurants&key=${apiKey}`;
 
